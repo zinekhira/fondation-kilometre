@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fondation Kilomètre — Pédaler pour l'éducation</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --vert: #1A3C2E;
+    --vert-med: #2D6A4F;
+    --vert-clair: #52B788;
+    --vert-pale: #D8F3DC;
+    --jaune: #F4C542;
+    --jaune-clair: #FFF5CC;
+    --beige: #FDF8F0;
+    --brun: #5C4033;
+    --texte: #1C1C1C;
+    --gris: #6B7280;
+    --blanc: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--beige);
+    color: var(--texte);
+    overflow-x: hidden;
+  }
+
+  /* ── NAVIGATION ─────────────────────────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(253,248,240,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 2px solid var(--vert-pale);
+    padding: 0 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 68px;
+    transition: box-shadow .3s;
+  }
+  nav.scrolled { box-shadow: 0 4px 30px rgba(26,60,46,.12); }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .nav-logo-wheel {
+    width: 38px; height: 38px;
+    background: var(--vert);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .nav-logo-text {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--vert);
+    line-height: 1.1;
+  }
+  .nav-logo-sub {
+    font-size: .65rem;
+    color: var(--vert-med);
+    font-weight: 400;
+    letter-spacing: .05em;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .nav-links {
+    display: flex; gap: 32px; list-style: none;
+    align-items: center;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--vert);
+    font-size: .9rem;
+    font-weight: 500;
+    letter-spacing: .02em;
+    position: relative;
+    padding-bottom: 3px;
+    transition: color .2s;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px; background: var(--jaune);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .25s;
+  }
+  .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+  .nav-links a:hover { color: var(--vert-med); }
+
+  .nav-cta {
+    background: var(--vert) !important;
+    color: var(--blanc) !important;
+    padding: 9px 22px !important;
+    border-radius: 100px !important;
+    transition: background .2s, transform .15s !important;
+  }
+  .nav-cta::after { display: none !important; }
+  .nav-cta:hover { background: var(--vert-med) !important; transform: translateY(-1px); }
+
+  .hamburger {
+    display: none; flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: pointer; padding: 4px;
+  }
+  .hamburger span { display: block; width: 24px; height: 2px; background: var(--vert); border-radius: 2px; transition: .3s; }
+
+  .mobile-menu {
+    display: none; position: fixed; top: 68px; left: 0; right: 0;
+    background: var(--beige); border-bottom: 2px solid var(--vert-pale);
+    padding: 20px 5% 28px; z-index: 999;
+    flex-direction: column; gap: 18px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { text-decoration: none; color: var(--vert); font-size: 1.1rem; font-weight: 500; }
+
+  /* ── PAGES ──────────────────────────────────────────────────── */
+  .page { display: none; padding-top: 68px; }
+  .page.active { display: block; }
+
+  /* ── HERO ───────────────────────────────────────────────────── */
+  .hero {
+    min-height: calc(100vh - 68px);
+    background: var(--vert);
+    position: relative;
+    display: flex; align-items: center;
+    overflow: hidden;
+  }
+
+  .hero-bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: .08;
+  }
+  .hero-bg-circle.c1 { width: 600px; height: 600px; background: var(--vert-clair); top: -200px; right: -150px; }
+  .hero-bg-circle.c2 { width: 350px; height: 350px; background: var(--jaune); bottom: -100px; left: -80px; }
+  .hero-bg-circle.c3 { width: 200px; height: 200px; background: var(--blanc); top: 40%; right: 15%; }
+
+  .hero-dots {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .hero-inner {
+    position: relative; z-index: 2;
+    max-width: 1100px; margin: 0 auto; padding: 80px 5%;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+  }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(244,197,66,.15);
+    border: 1px solid rgba(244,197,66,.35);
+    color: var(--jaune);
+    font-size: .8rem; font-weight: 600; letter-spacing: .08em;
+    padding: 6px 14px; border-radius: 100px;
+    margin-bottom: 24px;
+    animation: fadeUp .6s ease both;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.6rem, 5vw, 4rem);
+    font-weight: 900;
+    color: var(--blanc);
+    line-height: 1.1;
+    margin-bottom: 24px;
+    animation: fadeUp .6s .1s ease both;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--jaune);
+  }
+
+  .hero-desc {
+    color: rgba(255,255,255,.75);
+    font-size: 1.05rem;
+    line-height: 1.75;
+    margin-bottom: 36px;
+    animation: fadeUp .6s .2s ease both;
+  }
+
+  .hero-btns {
+    display: flex; gap: 14px; flex-wrap: wrap;
+    animation: fadeUp .6s .3s ease both;
+  }
+  .btn-primary {
+    background: var(--jaune);
+    color: var(--vert);
+    font-weight: 700; font-size: .95rem;
+    padding: 14px 28px; border-radius: 100px;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: transform .2s, box-shadow .2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(244,197,66,.4); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--blanc);
+    font-weight: 600; font-size: .95rem;
+    padding: 13px 28px; border-radius: 100px;
+    border: 2px solid rgba(255,255,255,.4);
+    text-decoration: none; cursor: pointer;
+    transition: border-color .2s, background .2s;
+    display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--blanc); background: rgba(255,255,255,.08); }
+
+  .hero-stats {
+    display: flex; gap: 28px; margin-top: 48px;
+    animation: fadeUp .6s .4s ease both;
+  }
+  .hero-stat { border-left: 3px solid var(--jaune); padding-left: 14px; }
+  .hero-stat-num { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--blanc); }
+  .hero-stat-lab { font-size: .75rem; color: rgba(255,255,255,.55); letter-spacing: .05em; }
+
+  .hero-visual {
+    animation: fadeUp .6s .25s ease both;
+    position: relative;
+  }
+  .hero-card-big {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 24px;
+    padding: 36px;
+    backdrop-filter: blur(8px);
+  }
+  .hero-steps { display: flex; flex-direction: column; gap: 20px; }
+  .hero-step {
+    display: flex; align-items: center; gap: 18px;
+    background: rgba(255,255,255,.06);
+    border-radius: 14px; padding: 16px 20px;
+    transition: background .2s;
+  }
+  .hero-step:hover { background: rgba(255,255,255,.1); }
+  .hero-step-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--jaune);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .hero-step-text { color: var(--blanc); }
+  .hero-step-title { font-weight: 600; font-size: .95rem; }
+  .hero-step-sub { font-size: .8rem; color: rgba(255,255,255,.55); margin-top: 2px; }
+
+  .hero-arrow {
+    text-align: center; color: rgba(255,255,255,.3);
+    font-size: 1.2rem; margin: -8px 0;
+  }
+
+  /* ── WAVE ───────────────────────────────────────────────────── */
+  .wave-divider { display: block; width: 100%; overflow: hidden; line-height: 0; }
+  .wave-divider svg { display: block; }
+
+  /* ── SECTIONS COMMUNES ──────────────────────────────────────── */
+  section { padding: 90px 5%; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+
+  .section-tag {
+    display: inline-block;
+    background: var(--vert-pale);
+    color: var(--vert-med);
+    font-size: .75rem; font-weight: 700; letter-spacing: .1em;
+    padding: 5px 14px; border-radius: 100px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+    font-weight: 700; color: var(--vert);
+    line-height: 1.2; margin-bottom: 16px;
+  }
+  .section-title em { font-style: italic; color: var(--vert-med); }
+
+  .section-sub {
+    color: var(--gris); font-size: 1.05rem; line-height: 1.75;
+    max-width: 560px;
+  }
+
+  /* ── ACCUEIL : CHIFFRES ─────────────────────────────────────── */
+  .chiffres {
+    background: var(--vert);
+    padding: 70px 5%;
+  }
+  .chiffres-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;
+    text-align: center;
+  }
+  .chiffre-item {}
+  .chiffre-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.2rem; font-weight: 900;
+    color: var(--jaune); line-height: 1;
+    margin-bottom: 8px;
+  }
+  .chiffre-label { color: rgba(255,255,255,.7); font-size: .9rem; line-height: 1.4; }
+
+  /* ── ACCUEIL : COMMENT ÇA MARCHE ────────────────────────────── */
+  .comment-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
+    margin-top: 52px;
+  }
+  .comment-card {
+    background: var(--blanc);
+    border-radius: 20px;
+    padding: 32px 28px;
+    border: 2px solid transparent;
+    transition: border-color .25s, transform .25s, box-shadow .25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .comment-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--vert-clair);
+  }
+  .comment-card:hover {
+    border-color: var(--vert-pale);
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(26,60,46,.1);
+  }
+  .comment-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem; font-weight: 900;
+    color: var(--vert-pale); line-height: 1;
+    margin-bottom: 12px;
+  }
+  .comment-icon { font-size: 2rem; margin-bottom: 14px; }
+  .comment-title { font-weight: 700; font-size: 1.05rem; color: var(--vert); margin-bottom: 10px; }
+  .comment-desc { color: var(--gris); font-size: .9rem; line-height: 1.65; }
+
+  /* ── ACCUEIL : APPEL À L'ACTION ─────────────────────────────── */
+  .cta-band {
+    background: linear-gradient(135deg, var(--vert) 0%, var(--vert-med) 100%);
+    border-radius: 28px;
+    padding: 64px 56px;
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 40px; align-items: center;
+    margin-top: 80px;
+    position: relative; overflow: hidden;
+  }
+  .cta-band::after {
+    content: '🚲';
+    position: absolute; right: -20px; bottom: -20px;
+    font-size: 160px; opacity: .06;
+    transform: rotate(-15deg);
+  }
+  .cta-band h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; color: var(--blanc);
+    margin-bottom: 12px;
+  }
+  .cta-band p { color: rgba(255,255,255,.7); font-size: .95rem; line-height: 1.65; max-width: 480px; }
+  .cta-band-btns { display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; }
+
+  /* ── MISSION ────────────────────────────────────────────────── */
+  .mission-hero {
+    background: var(--vert);
+    padding: 100px 5% 80px;
+    position: relative; overflow: hidden;
+  }
+  .mission-hero-inner { max-width: 800px; margin: 0 auto; text-align: center; }
+  .mission-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    font-weight: 900; color: var(--blanc); line-height: 1.15;
+    margin-bottom: 24px;
+  }
+  .mission-hero p { color: rgba(255,255,255,.75); font-size: 1.1rem; line-height: 1.8; }
+
+  .valeurs-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
+    margin-top: 52px;
+  }
+  .valeur-card {
+    background: var(--blanc);
+    border-radius: 20px; padding: 32px;
+    display: flex; gap: 20px;
+    border: 2px solid var(--vert-pale);
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .valeur-card:hover { border-color: var(--vert-clair); box-shadow: 0 10px 30px rgba(26,60,46,.08); }
+  .valeur-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: var(--vert-pale); display: flex; align-items: center;
+    justify-content: center; font-size: 22px; flex-shrink: 0;
+  }
+  .valeur-title { font-weight: 700; font-size: 1.05rem; color: var(--vert); margin-bottom: 8px; }
+  .valeur-desc { color: var(--gris); font-size: .9rem; line-height: 1.65; }
+
+  .equipe-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px;
+    margin-top: 52px;
+  }
+  .equipe-card {
+    background: var(--blanc);
+    border-radius: 20px; padding: 32px;
+    display: flex; align-items: center; gap: 24px;
+    border: 2px solid var(--vert-pale);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .equipe-card:hover { transform: translateY(-4px); box-shadow: 0 16px 36px rgba(26,60,46,.1); }
+  .equipe-avatar {
+    width: 70px; height: 70px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--vert) 0%, var(--vert-clair) 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; font-weight: 700; color: var(--blanc);
+    flex-shrink: 0;
+  }
+  .equipe-nom { font-weight: 700; font-size: 1.1rem; color: var(--vert); margin-bottom: 4px; }
+  .equipe-role { color: var(--vert-med); font-size: .85rem; font-weight: 600; margin-bottom: 8px; }
+  .equipe-desc { color: var(--gris); font-size: .85rem; line-height: 1.6; }
+
+  /* ── REJOINDRE ──────────────────────────────────────────────── */
+  .rejoindre-hero {
+    background: var(--vert);
+    padding: 100px 5% 80px;
+    text-align: center;
+  }
+  .rejoindre-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    font-weight: 900; color: var(--blanc); margin-bottom: 20px;
+  }
+  .rejoindre-hero p { color: rgba(255,255,255,.75); font-size: 1.05rem; max-width: 600px; margin: 0 auto; line-height: 1.75; }
+
+  .profils-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    margin-top: 52px;
+  }
+  .profil-card {
+    background: var(--blanc);
+    border-radius: 20px; padding: 32px 28px;
+    border: 2px solid var(--vert-pale);
+    transition: border-color .25s, transform .25s, box-shadow .25s;
+    text-align: center;
+  }
+  .profil-card:hover { border-color: var(--vert-clair); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(26,60,46,.1); }
+  .profil-card.highlight { border-color: var(--jaune); background: var(--jaune-clair); }
+  .profil-emoji { font-size: 2.6rem; margin-bottom: 16px; }
+  .profil-title { font-weight: 700; font-size: 1.05rem; color: var(--vert); margin-bottom: 10px; }
+  .profil-desc { color: var(--gris); font-size: .88rem; line-height: 1.65; margin-bottom: 20px; }
+  .profil-tag {
+    display: inline-block;
+    background: var(--vert-pale); color: var(--vert-med);
+    font-size: .75rem; font-weight: 600; padding: 4px 12px; border-radius: 100px;
+  }
+  .profil-card.highlight .profil-tag { background: var(--jaune); color: var(--vert); }
+
+  .form-section {
+    background: var(--blanc);
+    border-radius: 28px; padding: 52px;
+    border: 2px solid var(--vert-pale);
+    margin-top: 60px;
+  }
+  .form-section h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem; color: var(--vert); margin-bottom: 8px;
+  }
+  .form-section p { color: var(--gris); margin-bottom: 36px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .form-group { display: flex; flex-direction: column; gap: 7px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label { font-size: .85rem; font-weight: 600; color: var(--vert); }
+  .form-group input, .form-group select, .form-group textarea {
+    padding: 12px 16px;
+    border: 2px solid var(--vert-pale);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .95rem;
+    color: var(--texte);
+    background: var(--beige);
+    transition: border-color .2s;
+    outline: none;
+    resize: vertical;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--vert-clair);
+    background: var(--blanc);
+  }
+  .form-submit {
+    margin-top: 28px;
+    background: var(--vert); color: var(--blanc);
+    border: none; cursor: pointer;
+    padding: 14px 36px; border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .95rem; font-weight: 700;
+    transition: background .2s, transform .15s;
+  }
+  .form-submit:hover { background: var(--vert-med); transform: translateY(-2px); }
+
+  /* ── ACTUALITÉS ─────────────────────────────────────────────── */
+  .actu-hero {
+    background: var(--vert);
+    padding: 100px 5% 80px; text-align: center;
+  }
+  .actu-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-weight: 900; color: var(--blanc); margin-bottom: 20px;
+  }
+  .actu-hero p { color: rgba(255,255,255,.75); font-size: 1.05rem; }
+
+  .actu-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
+    margin-top: 52px;
+  }
+  .actu-card {
+    background: var(--blanc);
+    border-radius: 20px; overflow: hidden;
+    border: 2px solid var(--vert-pale);
+    transition: transform .25s, box-shadow .25s;
+  }
+  .actu-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(26,60,46,.1); }
+  .actu-img {
+    height: 180px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 4rem;
+  }
+  .actu-img.vert { background: linear-gradient(135deg, var(--vert), var(--vert-med)); }
+  .actu-img.jaune { background: linear-gradient(135deg, #e6a800, var(--jaune)); }
+  .actu-img.clair { background: linear-gradient(135deg, var(--vert-clair), var(--vert-med)); }
+  .actu-body { padding: 24px; }
+  .actu-date { font-size: .78rem; color: var(--gris); margin-bottom: 8px; font-weight: 500; }
+  .actu-title { font-weight: 700; font-size: 1rem; color: var(--vert); margin-bottom: 10px; line-height: 1.4; }
+  .actu-desc { color: var(--gris); font-size: .88rem; line-height: 1.65; margin-bottom: 18px; }
+  .actu-lire {
+    color: var(--vert-med); font-size: .85rem; font-weight: 700;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
+    transition: gap .2s;
+  }
+  .actu-lire:hover { gap: 10px; }
+
+  /* ── CONTACT ────────────────────────────────────────────────── */
+  .contact-hero {
+    background: var(--vert);
+    padding: 100px 5% 80px; text-align: center;
+  }
+  .contact-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-weight: 900; color: var(--blanc); margin-bottom: 20px;
+  }
+  .contact-hero p { color: rgba(255,255,255,.75); font-size: 1.05rem; }
+
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1.5fr; gap: 48px;
+    margin-top: 52px;
+  }
+  .contact-infos { display: flex; flex-direction: column; gap: 24px; }
+  .contact-info-card {
+    background: var(--blanc);
+    border-radius: 18px; padding: 24px;
+    border: 2px solid var(--vert-pale);
+    display: flex; gap: 18px; align-items: flex-start;
+  }
+  .contact-info-icon {
+    width: 46px; height: 46px; border-radius: 12px;
+    background: var(--vert-pale);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .contact-info-label { font-size: .78rem; font-weight: 700; color: var(--vert-med); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 4px; }
+  .contact-info-val { color: var(--texte); font-size: .95rem; line-height: 1.5; }
+
+  .contact-form {
+    background: var(--blanc);
+    border-radius: 24px; padding: 44px;
+    border: 2px solid var(--vert-pale);
+  }
+  .contact-form h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; color: var(--vert); margin-bottom: 28px;
+  }
+
+  /* ── FOOTER ─────────────────────────────────────────────────── */
+  footer {
+    background: var(--vert);
+    padding: 64px 5% 32px;
+    color: rgba(255,255,255,.7);
+  }
+  .footer-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px;
+    margin-bottom: 48px;
+  }
+  .footer-brand .nav-logo-text { font-size: 1.3rem; color: var(--blanc); }
+  .footer-brand .nav-logo-sub { color: rgba(255,255,255,.5); }
+  .footer-desc { font-size: .88rem; line-height: 1.7; margin: 16px 0 24px; color: rgba(255,255,255,.55); }
+  .footer-socials { display: flex; gap: 10px; }
+  .footer-social {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: rgba(255,255,255,.08);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; text-decoration: none;
+    transition: background .2s;
+  }
+  .footer-social:hover { background: rgba(255,255,255,.18); }
+  .footer-col h4 { color: var(--blanc); font-size: .85rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; margin-bottom: 18px; }
+  .footer-col a { display: block; color: rgba(255,255,255,.55); text-decoration: none; font-size: .88rem; margin-bottom: 10px; transition: color .2s; }
+  .footer-col a:hover { color: var(--blanc); }
+  .footer-bottom {
+    max-width: 1100px; margin: 0 auto;
+    border-top: 1px solid rgba(255,255,255,.1);
+    padding-top: 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: .82rem; color: rgba(255,255,255,.35);
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-bottom a { color: rgba(255,255,255,.35); text-decoration: none; }
+  .footer-bottom a:hover { color: rgba(255,255,255,.6); }
+
+  /* ── TOAST ──────────────────────────────────────────────────── */
+  .toast {
+    position: fixed; bottom: 28px; right: 28px;
+    background: var(--vert); color: var(--blanc);
+    padding: 14px 22px; border-radius: 12px;
+    font-size: .9rem; font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0,0,0,.2);
+    transform: translateY(80px); opacity: 0;
+    transition: transform .3s, opacity .3s;
+    z-index: 9999;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── ANIMATIONS ─────────────────────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .6s, transform .6s; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ─────────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-visual { display: none; }
+    .chiffres-inner { grid-template-columns: 1fr; gap: 28px; }
+    .comment-grid, .profils-grid { grid-template-columns: 1fr; }
+    .valeurs-grid, .equipe-grid { grid-template-columns: 1fr; }
+    .actu-grid { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+    .cta-band { grid-template-columns: 1fr; }
+    .cta-band-btns { flex-direction: row; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-section { padding: 32px; }
+    .contact-form { padding: 28px; }
+  }
+  @media (max-width: 500px) {
+    section { padding: 60px 5%; }
+    .footer-inner { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ──────────────────────────────────────────────── -->
+<nav id="navbar">
+  <a class="nav-logo" href="#" onclick="showPage('accueil')">
+    <div class="nav-logo-wheel">🚲</div>
+    <div>
+      <div class="nav-logo-text">Fondation Kilomètre</div>
+      <div class="nav-logo-sub">Pédaler pour l'éducation</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#" onclick="showPage('accueil')" id="nav-accueil" class="active">Accueil</a></li>
+    <li><a href="#" onclick="showPage('mission')" id="nav-mission">Notre mission</a></li>
+    <li><a href="#" onclick="showPage('rejoindre')" id="nav-rejoindre">Rejoindre</a></li>
+    <li><a href="#" onclick="showPage('actus')" id="nav-actus">Actualités</a></li>
+    <li><a href="#" onclick="showPage('contact')" id="nav-contact" class="nav-cta">Nous contacter</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#" onclick="showPage('accueil');toggleMenu()">🏠 Accueil</a>
+  <a href="#" onclick="showPage('mission');toggleMenu()">🎯 Notre mission</a>
+  <a href="#" onclick="showPage('rejoindre');toggleMenu()">🚲 Rejoindre</a>
+  <a href="#" onclick="showPage('actus');toggleMenu()">📰 Actualités</a>
+  <a href="#" onclick="showPage('contact');toggleMenu()">✉️ Nous contacter</a>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- PAGE ACCUEIL                                                   -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="page active" id="page-accueil">
+
+  <div class="hero">
+    <div class="hero-bg-circle c1"></div>
+    <div class="hero-bg-circle c2"></div>
+    <div class="hero-bg-circle c3"></div>
+    <div class="hero-dots"></div>
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-tag">🌱 Fondée à Lyon en 2026</div>
+        <h1>Chaque <em>kilomètre</em> pédalé rapproche un enfant de <em>son école</em></h1>
+        <p class="hero-desc">Nous livrons à vélo à Lyon. Les revenus financent des vélos pour des enfants qui, chaque matin, ne peuvent pas rejoindre leur école. Simple, concret, humain.</p>
+        <div class="hero-btns">
+          <a href="#" class="btn-primary" onclick="showPage('rejoindre')">Devenir livreur bénévole</a>
+          <a href="#" class="btn-outline" onclick="showPage('mission')">Notre mission</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-num">0 km</div>
+            <div class="hero-stat-lab">parcourus depuis<br>la création</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">0 vélo</div>
+            <div class="hero-stat-lab">offert à ce jour,<br>le premier arrive !</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">Lyon</div>
+            <div class="hero-stat-lab">siège social,<br>ambitions nationales</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card-big">
+          <div class="hero-steps">
+            <div class="hero-step">
+              <div class="hero-step-icon">🚴</div>
+              <div class="hero-step-text">
+                <div class="hero-step-title">Vous pédalez & livrez</div>
+                <div class="hero-step-sub">Repas, colis, courriers à Lyon</div>
+              </div>
+            </div>
+            <div class="hero-arrow">↓</div>
+            <div class="hero-step">
+              <div class="hero-step-icon">💛</div>
+              <div class="hero-step-text">
+                <div class="hero-step-title">Les revenus sont reversés</div>
+                <div class="hero-step-sub">100% des bénéfices nets</div>
+              </div>
+            </div>
+            <div class="hero-arrow">↓</div>
+            <div class="hero-step">
+              <div class="hero-step-icon">🎒</div>
+              <div class="hero-step-text">
+                <div class="hero-step-title">Un enfant reçoit un vélo</div>
+                <div class="hero-step-sub">Et peut aller à l'école</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <svg class="wave-divider" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 60" preserveAspectRatio="none" style="background:var(--vert)">
+    <path fill="var(--beige)" d="M0,40 C360,80 1080,0 1440,40 L1440,60 L0,60 Z"/>
+  </svg>
+
+  <!-- Chiffres clés -->
+  <div class="chiffres" style="background:var(--vert); margin-top:-2px; padding-top:0; padding-bottom:64px;">
+    <div class="chiffres-inner">
+      <div class="chiffre-item reveal">
+        <div class="chiffre-num">100%</div>
+        <div class="chiffre-label">des bénéfices reversés<br>à l'achat de vélos</div>
+      </div>
+      <div class="chiffre-item reveal">
+        <div class="chiffre-num">2</div>
+        <div class="chiffre-label">fondateurs engagés<br>dès le premier jour</div>
+      </div>
+      <div class="chiffre-item reveal">
+        <div class="chiffre-num">∞</div>
+        <div class="chiffre-label">places disponibles<br>pour des livreurs bénévoles</div>
+      </div>
+    </div>
+  </div>
+
+  <svg class="wave-divider" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 60" preserveAspectRatio="none" style="background:var(--beige)">
+    <path fill="var(--vert)" d="M0,20 C360,60 1080,-20 1440,20 L1440,0 L0,0 Z"/>
+  </svg>
+
+  <!-- Comment ça marche -->
+  <section>
+    <div class="section-inner">
+      <div class="reveal">
+        <span class="section-tag">Le modèle</span>
+        <h2 class="section-title">Comment ça <em>marche</em> ?</h2>
+        <p class="section-sub">Un principe simple : transformer chaque livraison en acte éducatif.</p>
+      </div>
+      <div class="comment-grid">
+        <div class="comment-card reveal">
+          <div class="comment-num">01</div>
+          <div class="comment-icon">🚲</div>
+          <div class="comment-title">Des livraisons à vélo</div>
+          <div class="comment-desc">Nos livreurs bénévoles assurent des livraisons professionnelles à vélo cargo dans Lyon : repas, colis, courriers d'entreprise, produits pharmaceutiques. Zéro émission, 100% engagement.</div>
+        </div>
+        <div class="comment-card reveal">
+          <div class="comment-num">02</div>
+          <div class="comment-icon">💰</div>
+          <div class="comment-title">Des revenus reversés</div>
+          <div class="comment-desc">Les bénéfices nets générés par ces livraisons sont intégralement affectés à l'achat de vélos. Aucune dépense superflue, une transparence totale sur les comptes publiés chaque année.</div>
+        </div>
+        <div class="comment-card reveal">
+          <div class="comment-num">03</div>
+          <div class="comment-icon">🎒</div>
+          <div class="comment-title">Des vélos offerts</div>
+          <div class="comment-desc">Les vélos sont distribués à des enfants et adolescents éloignés de leur établissement scolaire, en France et à l'international, via des partenaires associatifs locaux.</div>
+        </div>
+      </div>
+
+      <div class="cta-band reveal">
+        <div>
+          <h2>Rejoignez l'aventure</h2>
+          <p>Que vous soyez citoyen engagé, passionné de vélo ou commerçant lyonnais — votre énergie peut changer des vies. On cherche des livreurs, des bénévoles et des partenaires.</p>
+        </div>
+        <div class="cta-band-btns">
+          <a href="#" class="btn-primary" onclick="showPage('rejoindre')">Je veux pédaler</a>
+          <a href="#" class="btn-outline" onclick="showPage('contact')">Nous écrire</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="nav-logo">
+          <div class="nav-logo-wheel">🚲</div>
+          <div>
+            <div class="nav-logo-text">Fondation Kilomètre</div>
+            <div class="nav-logo-sub">Pédaler pour l'éducation</div>
+          </div>
+        </div>
+        <p class="footer-desc">Association loi 1901 fondée à Lyon en 2026. Chaque kilomètre pédalé finance un vélo pour un enfant.</p>
+        <div class="footer-socials">
+          <a class="footer-social" href="#">📘</a>
+          <a class="footer-social" href="#">📸</a>
+          <a class="footer-social" href="#">💼</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Navigation</h4>
+        <a href="#" onclick="showPage('accueil')">Accueil</a>
+        <a href="#" onclick="showPage('mission')">Notre mission</a>
+        <a href="#" onclick="showPage('rejoindre')">Rejoindre</a>
+        <a href="#" onclick="showPage('actus')">Actualités</a>
+        <a href="#" onclick="showPage('contact')">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>L'association</h4>
+        <a href="#">Statuts</a>
+        <a href="#">Rapport annuel</a>
+        <a href="#">Nos partenaires</a>
+        <a href="#">Presse</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="#">contact@fondation-kilometre.org</a>
+        <a href="#">22 rue d'Algérie</a>
+        <a href="#">69001 Lyon</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Fondation Kilomètre — Association loi 1901</span>
+      <span><a href="#">Mentions légales</a> · <a href="#">Politique de confidentialité</a></span>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- PAGE MISSION                                                   -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-mission">
+  <div class="mission-hero">
+    <div class="mission-hero-inner">
+      <span class="section-tag" style="background:rgba(255,255,255,.15);color:var(--jaune)">Notre raison d'être</span>
+      <h1>Pédaler pour<br><em style="color:var(--jaune)">l'éducation</em></h1>
+      <p>Dans de nombreuses régions, l'éloignement géographique reste un obstacle majeur à la scolarisation. La Fondation Kilomètre transforme chaque livraison en acte éducatif concret.</p>
+    </div>
+  </div>
+  <svg class="wave-divider" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 60" preserveAspectRatio="none" style="background:var(--vert)">
+    <path fill="var(--beige)" d="M0,40 C360,80 1080,0 1440,40 L1440,60 L0,60 Z"/>
+  </svg>
+
+  <section>
+    <div class="section-inner">
+
+      <!-- Le problème -->
+      <div class="reveal" style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;margin-bottom:80px;">
+        <div>
+          <span class="section-tag">Le constat mondial</span>
+          <h2 class="section-title">272 millions d'enfants privés <em>d'école</em></h2>
+          <p style="color:var(--gris);line-height:1.8;margin-bottom:16px;">Selon l'UNESCO (2025), <strong style="color:var(--vert)">272 millions d'enfants</strong> ne sont pas scolarisés dans le monde — un chiffre en hausse depuis 2021. En Afrique subsaharienne, près d'<strong style="color:var(--vert)">1 enfant sur 5</strong> en âge d'aller à l'école primaire n'y va pas, et plus d'<strong style="color:var(--vert)">1 adolescent sur 3</strong> ne fréquente pas le collège.</p>
+          <p style="color:var(--gris);line-height:1.8;margin-bottom:16px;">L'une des causes les plus invisibles : <strong style="color:var(--vert)">la distance</strong>. Quand l'école est à 10 ou 15 kilomètres, à pied dans la chaleur ou la boue, beaucoup abandonnent. Un vélo peut tout changer.</p>
+          <p style="color:var(--gris);line-height:1.8;">C'est exactement ce que nous faisons : transformer chaque livraison à vélo à Lyon en vélo offert là où l'éducation en a le plus besoin.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div style="background:var(--blanc);border-radius:18px;padding:24px;border:2px solid var(--vert-pale);display:flex;align-items:center;gap:18px;">
+            <div style="font-size:2.2rem;flex-shrink:0;">🌍</div>
+            <div>
+              <div style="font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;color:var(--vert);line-height:1;">272 millions</div>
+              <div style="color:var(--gris);font-size:.88rem;margin-top:3px;">d'enfants non scolarisés dans le monde <span style="font-size:.78rem">(UNESCO 2025)</span></div>
+            </div>
+          </div>
+          <div style="background:var(--blanc);border-radius:18px;padding:24px;border:2px solid var(--vert-pale);display:flex;align-items:center;gap:18px;">
+            <div style="font-size:2.2rem;flex-shrink:0;">🌑</div>
+            <div>
+              <div style="font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;color:var(--vert);line-height:1;">98 millions</div>
+              <div style="color:var(--gris);font-size:.88rem;margin-top:3px;">vivent en Afrique subsaharienne — 40% du total mondial <span style="font-size:.78rem">(UNESCO)</span></div>
+            </div>
+          </div>
+          <div style="background:var(--blanc);border-radius:18px;padding:24px;border:2px solid var(--vert-pale);display:flex;align-items:center;gap:18px;">
+            <div style="font-size:2.2rem;flex-shrink:0;">🚲</div>
+            <div>
+              <div style="font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;color:var(--vert);line-height:1;">-80%</div>
+              <div style="color:var(--gris);font-size:.88rem;margin-top:3px;">de temps de trajet avec un vélo — et une scolarisation qui repart à la hausse</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Zoom Afrique -->
+      <div class="reveal" style="background:var(--vert);border-radius:24px;padding:48px;margin-bottom:80px;position:relative;overflow:hidden;">
+        <div style="position:absolute;right:-40px;bottom:-40px;font-size:160px;opacity:.06;">🌍</div>
+        <div style="position:relative;z-index:1;">
+          <span class="section-tag" style="background:rgba(255,255,255,.15);color:var(--jaune)">Zoom Afrique subsaharienne</span>
+          <h3 style="font-family:'Playfair Display',serif;font-size:1.7rem;color:var(--blanc);margin:14px 0 24px;">La région la plus touchée — et la seule où le nombre empire</h3>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+            <div style="background:rgba(255,255,255,.08);border-radius:16px;padding:24px;text-align:center;">
+              <div style="font-size:2rem;margin-bottom:8px;">🇳🇬</div>
+              <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--jaune);">20 millions</div>
+              <div style="color:rgba(255,255,255,.7);font-size:.85rem;margin-top:6px;">enfants non scolarisés au Nigeria</div>
+            </div>
+            <div style="background:rgba(255,255,255,.08);border-radius:16px;padding:24px;text-align:center;">
+              <div style="font-size:2rem;margin-bottom:8px;">🇪🇹</div>
+              <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--jaune);">10,5 millions</div>
+              <div style="color:rgba(255,255,255,.7);font-size:.85rem;margin-top:6px;">enfants non scolarisés en Éthiopie</div>
+            </div>
+            <div style="background:rgba(255,255,255,.08);border-radius:16px;padding:24px;text-align:center;">
+              <div style="font-size:2rem;margin-bottom:8px;">🇨🇩</div>
+              <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--jaune);">5,9 millions</div>
+              <div style="color:rgba(255,255,255,.7);font-size:.85rem;margin-top:6px;">enfants non scolarisés en RD Congo</div>
+            </div>
+          </div>
+          <p style="color:rgba(255,255,255,.65);font-size:.88rem;margin-top:20px;line-height:1.7;">En Afrique subsaharienne, le taux de non-scolarisation au collège dépasse 33%. Au Niger, 39% des enfants n'ont pas accès à l'école primaire. L'Afrique subsaharienne est la seule région du monde où le nombre d'enfants non scolarisés <em>augmente</em> encore.</p>
+        </div>
+      </div>
+
+      <!-- Valeurs -->
+      <div class="reveal">
+        <span class="section-tag">Ce qui nous guide</span>
+        <h2 class="section-title">Nos <em>valeurs</em></h2>
+      </div>
+      <div class="valeurs-grid">
+        <div class="valeur-card reveal">
+          <div class="valeur-icon">🌿</div>
+          <div><div class="valeur-title">Écologie & mobilité douce</div><div class="valeur-desc">Chaque livraison à vélo remplace un trajet motorisé. Nous agissons pour l'environnement en même temps que pour l'éducation.</div></div>
+        </div>
+        <div class="valeur-card reveal">
+          <div class="valeur-icon">🌍</div>
+          <div><div class="valeur-title">Impact global, action locale</div><div class="valeur-desc">Nous croyons que l'acte le plus simple — pédaler — peut avoir un impact éducatif durable, en France comme ailleurs dans le monde.</div></div>
+        </div>
+        <div class="valeur-card reveal">
+          <div class="valeur-icon">🤝</div>
+          <div><div class="valeur-title">Transparence totale</div><div class="valeur-desc">Nos comptes sont publiés chaque année. Chaque euro reçu et dépensé est traçable. Vous savez exactement où va votre engagement.</div></div>
+        </div>
+        <div class="valeur-card reveal">
+          <div class="valeur-icon">❤️</div>
+          <div><div class="valeur-title">Humanité & proximité</div><div class="valeur-desc">Chaque vélo offert crée un lien humain concret entre nos livreurs et les enfants bénéficiaires. Pas une aide anonyme, une vraie rencontre.</div></div>
+        </div>
+      </div>
+
+      <!-- Équipe -->
+      <div class="reveal" style="margin-top:80px;">
+        <span class="section-tag">L'équipe fondatrice</span>
+        <h2 class="section-title">Ceux qui <em>pédalent</em> en premier</h2>
+      </div>
+      <div class="equipe-grid">
+        <div class="equipe-card reveal">
+          <div class="equipe-avatar">ZK</div>
+          <div>
+            <div class="equipe-nom">Zine Khira</div>
+            <div class="equipe-role">🏅 Président & co-fondateur</div>
+            <div class="equipe-desc">Né au Mans en 1991, Zine est à l'origine du concept Fondation Kilomètre. Il pilote la stratégie, les partenariats et les opérations de livraison à Lyon.</div>
+          </div>
+        </div>
+        <div class="equipe-card reveal">
+          <div class="equipe-avatar">BE</div>
+          <div>
+            <div class="equipe-nom">Billal El Mrasni</div>
+            <div class="equipe-role">📋 Secrétaire-Trésorier & co-fondateur</div>
+            <div class="equipe-desc">Né au Mans en 2005, Billal assure la gestion administrative et financière de l'association. Premier livreur officiel de la Fondation Kilomètre.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="nav-logo">
+          <div class="nav-logo-wheel">🚲</div>
+          <div><div class="nav-logo-text">Fondation Kilomètre</div><div class="nav-logo-sub">Pédaler pour l'éducation</div></div>
+        </div>
+        <p class="footer-desc">Association loi 1901 fondée à Lyon en 2026.</p>
+        <div class="footer-socials"><a class="footer-social" href="#">📘</a><a class="footer-social" href="#">📸</a><a class="footer-social" href="#">💼</a></div>
+      </div>
+      <div class="footer-col"><h4>Navigation</h4><a href="#" onclick="showPage('accueil')">Accueil</a><a href="#" onclick="showPage('mission')">Notre mission</a><a href="#" onclick="showPage('rejoindre')">Rejoindre</a><a href="#" onclick="showPage('actus')">Actualités</a><a href="#" onclick="showPage('contact')">Contact</a></div>
+      <div class="footer-col"><h4>L'association</h4><a href="#">Statuts</a><a href="#">Rapport annuel</a><a href="#">Nos partenaires</a><a href="#">Presse</a></div>
+      <div class="footer-col"><h4>Contact</h4><a href="#">contact@fondation-kilometre.org</a><a href="#">22 rue d'Algérie, 69001 Lyon</a></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Fondation Kilomètre — Association loi 1901</span><span><a href="#">Mentions légales</a> · <a href="#">Politique de confidentialité</a></span></div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- PAGE REJOINDRE                                                 -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-rejoindre">
+  <div class="rejoindre-hero">
+    <span class="section-tag" style="background:rgba(255,255,255,.15);color:var(--jaune)">Passez à l'action</span>
+    <h1>Rejoignez la Fondation Kilomètre</h1>
+    <p>Que vous soyez passionné de vélo, citoyen engagé ou commerçant lyonnais — il y a une place pour vous dans la Fondation Kilomètre.</p>
+  </div>
+  <svg class="wave-divider" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 60" preserveAspectRatio="none" style="background:var(--vert)">
+    <path fill="var(--beige)" d="M0,40 C360,80 1080,0 1440,40 L1440,60 L0,60 Z"/>
+  </svg>
+
+  <section>
+    <div class="section-inner">
+      <div class="reveal">
+        <span class="section-tag">Votre profil</span>
+        <h2 class="section-title">Quel rôle vous <em>ressemble</em> ?</h2>
+      </div>
+      <div class="profils-grid">
+        <div class="profil-card highlight reveal">
+          <div class="profil-emoji">🚴</div>
+          <div class="profil-title">Livreur engagé</div>
+          <div class="profil-desc">Vous avez un vélo et de l'énergie. Vous effectuez des livraisons à Lyon selon vos disponibilités. Chaque course compte — directement pour un enfant quelque part dans le monde.</div>
+          <span class="profil-tag">⭐ Rôle phare</span>
+        </div>
+        <div class="profil-card reveal">
+          <div class="profil-emoji">🤝</div>
+          <div class="profil-title">Bénévole organisateur</div>
+          <div class="profil-desc">Vous préférez agir en coulisses : communication, logistique, coordination des livraisons, relation avec les partenaires. La Fondation a besoin de vous aussi.</div>
+          <span class="profil-tag">Ouvert à tous</span>
+        </div>
+        <div class="profil-card reveal">
+          <div class="profil-emoji">🤝</div>
+          <div class="profil-title">Partenaire commerce</div>
+          <div class="profil-desc">Vous êtes restaurateur, pharmacien ou commerçant à Lyon. Vous confiez vos livraisons à la Fondation et communiquez sur votre engagement éthique.</div>
+          <span class="profil-tag">Partenariat</span>
+        </div>
+      </div>
+
+      <!-- Formulaire -->
+      <div class="form-section reveal">
+        <h3>Inscription — Je rejoins la Fondation</h3>
+        <p>Remplissez ce formulaire, nous vous recontactons sous 48h.</p>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Prénom *</label>
+            <input type="text" placeholder="Votre prénom" id="r-prenom">
+          </div>
+          <div class="form-group">
+            <label>Nom *</label>
+            <input type="text" placeholder="Votre nom" id="r-nom">
+          </div>
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" placeholder="votre@email.com" id="r-email">
+          </div>
+          <div class="form-group">
+            <label>Téléphone</label>
+            <input type="tel" placeholder="06 xx xx xx xx" id="r-tel">
+          </div>
+          <div class="form-group">
+            <label>Je souhaite rejoindre en tant que *</label>
+            <select id="r-role">
+              <option value="">— Choisissez un rôle —</option>
+              <option>Livreur engagé à vélo</option>
+              <option>Bénévole organisateur</option>
+              <option>Partenaire commerce</option>
+              <option>Autre</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Ville</label>
+            <input type="text" placeholder="Lyon" id="r-ville">
+          </div>
+          <div class="form-group full">
+            <label>Parlez-nous de vous et de votre motivation</label>
+            <textarea rows="4" placeholder="Pourquoi vous voulez rejoindre la Fondation Kilomètre..." id="r-message"></textarea>
+          </div>
+        </div>
+        <button class="form-submit" onclick="submitForm('rejoindre')">✉️ Envoyer ma candidature</button>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand"><div class="nav-logo"><div class="nav-logo-wheel">🚲</div><div><div class="nav-logo-text">Fondation Kilomètre</div><div class="nav-logo-sub">Pédaler pour l'éducation</div></div></div><p class="footer-desc">Association loi 1901 fondée à Lyon en 2026.</p></div>
+      <div class="footer-col"><h4>Navigation</h4><a href="#" onclick="showPage('accueil')">Accueil</a><a href="#" onclick="showPage('mission')">Notre mission</a><a href="#" onclick="showPage('rejoindre')">Rejoindre</a><a href="#" onclick="showPage('actus')">Actualités</a><a href="#" onclick="showPage('contact')">Contact</a></div>
+      <div class="footer-col"><h4>Contact</h4><a href="#">contact@fondation-kilometre.org</a><a href="#">22 rue d'Algérie, 69001 Lyon</a></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Fondation Kilomètre</span><span><a href="#">Mentions légales</a></span></div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- PAGE ACTUALITÉS                                                -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-actus">
+  <div class="actu-hero">
+    <span class="section-tag" style="background:rgba(255,255,255,.15);color:var(--jaune)">Le journal de bord</span>
+    <h1>Actualités</h1>
+    <p>Suivez l'aventure de la Fondation Kilomètre, de la première livraison au premier vélo offert.</p>
+  </div>
+  <svg class="wave-divider" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 60" preserveAspectRatio="none" style="background:var(--vert)">
+    <path fill="var(--beige)" d="M0,40 C360,80 1080,0 1440,40 L1440,60 L0,60 Z"/>
+  </svg>
+
+  <section>
+    <div class="section-inner">
+      <div class="actu-grid">
+        <div class="actu-card reveal">
+          <div class="actu-img vert">🎉</div>
+          <div class="actu-body">
+            <div class="actu-date">9 avril 2026</div>
+            <div class="actu-title">La Fondation Kilomètre est officiellement créée !</div>
+            <div class="actu-desc">Après des mois de préparation, l'association est déclarée en préfecture du Rhône. Zine et Billal, les deux co-fondateurs, sont prêts à pédaler pour l'éducation.</div>
+            <a href="#" class="actu-lire">Lire la suite →</a>
+          </div>
+        </div>
+        <div class="actu-card reveal">
+          <div class="actu-img jaune">🚲</div>
+          <div class="actu-body">
+            <div class="actu-date">Bientôt</div>
+            <div class="actu-title">Nos premières livraisons à Lyon — rejoignez-nous !</div>
+            <div class="actu-desc">Nous recrutons nos premiers livreurs bénévoles et cherchons des partenaires commerçants lyonnais. Vous avez un vélo et de l'énergie ? Écrivez-nous.</div>
+            <a href="#" class="actu-lire" onclick="showPage('rejoindre')">Je veux participer →</a>
+          </div>
+        </div>
+        <div class="actu-card reveal">
+          <div class="actu-img clair">🌍</div>
+          <div class="actu-body">
+            <div class="actu-date">À venir</div>
+            <div class="actu-title">Nos premiers vélos — où seront-ils offerts ?</div>
+            <div class="actu-desc">272 millions d'enfants ne vont pas à l'école dans le monde. En Afrique subsaharienne, 1 enfant sur 5 ne peut pas accéder à l'école primaire. Nos premiers vélos iront là où le besoin est le plus fort.</div>
+            <a href="#" class="actu-lire" onclick="showPage('mission')">Notre mission →</a>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:60px;background:var(--vert-pale);border-radius:20px;padding:40px;text-align:center;" class="reveal">
+        <div style="font-size:2rem;margin-bottom:12px;">📬</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--vert);margin-bottom:10px;">Restez informé(e)</h3>
+        <p style="color:var(--gris);margin-bottom:24px;max-width:440px;margin-left:auto;margin-right:auto;">Inscrivez-vous à notre newsletter pour suivre les premières livraisons, les vélos offerts et toute l'actualité de la Fondation.</p>
+        <div style="display:flex;gap:12px;justify-content:center;max-width:420px;margin:0 auto;flex-wrap:wrap;">
+          <input type="email" placeholder="votre@email.com" id="nl-email" style="flex:1;padding:12px 18px;border:2px solid var(--vert-pale);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;background:white;min-width:200px;">
+          <button class="btn-primary" onclick="submitNewsletter()" style="white-space:nowrap;">S'inscrire</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand"><div class="nav-logo"><div class="nav-logo-wheel">🚲</div><div><div class="nav-logo-text">Fondation Kilomètre</div><div class="nav-logo-sub">Pédaler pour l'éducation</div></div></div><p class="footer-desc">Association loi 1901 fondée à Lyon en 2026.</p></div>
+      <div class="footer-col"><h4>Navigation</h4><a href="#" onclick="showPage('accueil')">Accueil</a><a href="#" onclick="showPage('mission')">Notre mission</a><a href="#" onclick="showPage('rejoindre')">Rejoindre</a><a href="#" onclick="showPage('actus')">Actualités</a><a href="#" onclick="showPage('contact')">Contact</a></div>
+      <div class="footer-col"><h4>Contact</h4><a href="#">contact@fondation-kilometre.org</a><a href="#">22 rue d'Algérie, 69001 Lyon</a></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Fondation Kilomètre</span><span><a href="#">Mentions légales</a></span></div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- PAGE CONTACT                                                   -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-contact">
+  <div class="contact-hero">
+    <span class="section-tag" style="background:rgba(255,255,255,.15);color:var(--jaune)">On est là</span>
+    <h1>Parlons-nous</h1>
+    <p>Une question, une idée de partenariat, un coup de pédale à proposer ? Écrivez-nous, on répond vite.</p>
+  </div>
+  <svg class="wave-divider" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 60" preserveAspectRatio="none" style="background:var(--vert)">
+    <path fill="var(--beige)" d="M0,40 C360,80 1080,0 1440,40 L1440,60 L0,60 Z"/>
+  </svg>
+
+  <section>
+    <div class="section-inner">
+      <div class="contact-grid">
+        <div class="contact-infos">
+          <div class="contact-info-card reveal">
+            <div class="contact-info-icon">📍</div>
+            <div><div class="contact-info-label">Siège social</div><div class="contact-info-val">22 rue d'Algérie<br>69001 Lyon, France</div></div>
+          </div>
+          <div class="contact-info-card reveal">
+            <div class="contact-info-icon">✉️</div>
+            <div><div class="contact-info-label">Email</div><div class="contact-info-val">contact@fondation-kilometre.org</div></div>
+          </div>
+          <div class="contact-info-card reveal">
+            <div class="contact-info-icon">🏅</div>
+            <div><div class="contact-info-label">Président</div><div class="contact-info-val">Zine Khira<br>zine@fondation-kilometre.org</div></div>
+          </div>
+          <div class="contact-info-card reveal">
+            <div class="contact-info-icon">🕐</div>
+            <div><div class="contact-info-label">Réponse</div><div class="contact-info-val">Nous répondons sous 48h en semaine</div></div>
+          </div>
+        </div>
+
+        <div class="contact-form reveal">
+          <h3>Envoyez-nous un message</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Prénom *</label>
+              <input type="text" placeholder="Votre prénom" id="c-prenom">
+            </div>
+            <div class="form-group">
+              <label>Nom *</label>
+              <input type="text" placeholder="Votre nom" id="c-nom">
+            </div>
+            <div class="form-group full">
+              <label>Email *</label>
+              <input type="email" placeholder="votre@email.com" id="c-email">
+            </div>
+            <div class="form-group full">
+              <label>Sujet</label>
+              <select id="c-sujet">
+                <option>Devenir livreur bénévole</option>
+                
+                <option>Partenariat commerce</option>
+                <option>Don ou mécénat</option>
+                <option>Presse / médias</option>
+                <option>Autre</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label>Message *</label>
+              <textarea rows="5" placeholder="Votre message..." id="c-message"></textarea>
+            </div>
+          </div>
+          <button class="form-submit" onclick="submitForm('contact')">📨 Envoyer le message</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand"><div class="nav-logo"><div class="nav-logo-wheel">🚲</div><div><div class="nav-logo-text">Fondation Kilomètre</div><div class="nav-logo-sub">Pédaler pour l'éducation</div></div></div><p class="footer-desc">Association loi 1901 fondée à Lyon en 2026.</p></div>
+      <div class="footer-col"><h4>Navigation</h4><a href="#" onclick="showPage('accueil')">Accueil</a><a href="#" onclick="showPage('mission')">Notre mission</a><a href="#" onclick="showPage('rejoindre')">Rejoindre</a><a href="#" onclick="showPage('actus')">Actualités</a><a href="#" onclick="showPage('contact')">Contact</a></div>
+      <div class="footer-col"><h4>Contact</h4><a href="#">contact@fondation-kilometre.org</a><a href="#">22 rue d'Algérie, 69001 Lyon</a></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Fondation Kilomètre</span><span><a href="#">Mentions légales</a></span></div>
+  </footer>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── NAVIGATION ───────────────────────────────────────────────
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    const page = document.getElementById('page-' + id);
+    if (page) { page.classList.add('active'); window.scrollTo(0,0); }
+    const nav = document.getElementById('nav-' + id);
+    if (nav) nav.classList.add('active');
+    setTimeout(revealAll, 100);
+    return false;
+  }
+
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+
+  // ── SCROLL ───────────────────────────────────────────────────
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+    revealAll();
+  });
+
+  function revealAll() {
+    document.querySelectorAll('.reveal').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight - 60) el.classList.add('visible');
+    });
+  }
+
+  // ── FORMULAIRES ──────────────────────────────────────────────
+  function submitForm(type) {
+    showToast('✅ Message envoyé ! Nous vous répondons sous 48h.');
+  }
+
+  function submitNewsletter() {
+    const email = document.getElementById('nl-email').value;
+    if (!email || !email.includes('@')) { showToast('⚠️ Veuillez entrer un email valide.'); return; }
+    showToast('📬 Inscription confirmée ! Merci de nous suivre.');
+    document.getElementById('nl-email').value = '';
+  }
+
+  // ── TOAST ────────────────────────────────────────────────────
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  // ── INIT ─────────────────────────────────────────────────────
+  setTimeout(revealAll, 200);
+</script>
+</body>
+</html>
